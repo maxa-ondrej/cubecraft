@@ -56,6 +56,18 @@ final class StringTesterPresenter extends BasePresenter
                     $failed['Command Name'][] = $row;
                 }
             }
+            preg_match_all('/&./', $row['string'], $colorCodesString);
+            preg_match_all('/&./', $row['translated'], $colorCodesTranslated);
+            if(count($colorCodesString) != count($colorCodesTranslated)) {
+                $failed['Colour Codes'][] = $row;
+            } else {
+                foreach($colorCodesString as $key => $colorCode) {
+                    if($colorCode != $colorCodesTranslated[$key]) {
+                        $failed['Colour Codes'][] = $row;
+                        break;
+                    }
+                }
+            }
         }
         $this->template->failed = $failed;
     }
