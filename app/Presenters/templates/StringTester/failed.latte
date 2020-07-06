@@ -1,0 +1,25 @@
+{var $title="String Tester"}
+{block content}
+{foreach $failed as $name => $data}
+<h4>{$name}</h4>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 10%">Row</th>
+            <th style="width: 30%">String Key</th>
+            <th style="width: 30%">English String</th>
+            <th style="width: 30%">Translated String</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach $data as $row}
+        <tr>
+            {foreach $row as $column}
+            <td>{$column}</td>
+            {/foreach}
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+{/foreach}
+{/block}
