@@ -47,28 +47,74 @@ final class StringTesterPresenter extends BasePresenter
         $this->redirect('StringTester:failed', $filename);
     }
 
-    public function renderFailed($filename) {
+    public function renderFailed($filename)
+    {
         $data = include $filename;
         $failed = [];
         foreach($data as $row) {
-            if(preg_match('/command_.*_name/', $row['key'])) {
-                if($row['string'] != $row['translated']) {
-                    $failed['Command Name'][] = $row;
-                }
+            if(!$this->checkCommandName($row)) {
+                $failed['Command Name'][] = $row;
             }
-            preg_match_all('/&./', $row['string'], $colorCodesString);
-            preg_match_all('/&./', $row['translated'], $colorCodesTranslated);
-            if(count($colorCodesString) != count($colorCodesTranslated)) {
+            if(!$this->checkColorCodes($row)) {
                 $failed['Colour Codes'][] = $row;
-            } else {
-                foreach($colorCodesString as $key => $colorCode) {
-                    if($colorCode != $colorCodesTranslated[$key]) {
-                        $failed['Colour Codes'][] = $row;
-                        break;
-                    }
-                }
+            }
+            if(!$this->checkNumbers($row)) {
+                $failed['Numbers'][] = $row;
+            }
+            if(!$this->checkNumberOfCodes($row)) {
+                $failed['Number Of Codes'][] = $row;
             }
         }
         $this->template->failed = $failed;
+    }
+
+    protected function checkCommandName(array $row): bool
+    {
+        if(preg_match('/command_.*_name/', $row['key'])) {
+            if($row['string'] != $row['translated']) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function checkColorCodes(array $row): bool
+    {
+        preg_match_all('/&./', $row['string'], $colorCodesString);
+        preg_match_all('/&./', $row['translated'], $colorCodesTranslated);
+        if(count($colorCodesString) != count($colorCodesTranslated)) {
+            return false;
+        }
+        foreach($colorCodesString as $key => $colorCode) {
+            if($colorCode != $colorCodesTranslated[$key]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function checkNumbers(array $row): bool
+    {
+        preg_match_all('/\d/', $row['string'], $stringNumbers);
+        preg_match_all('/\d/', $row['translated'], $translatedNumbers);
+        if(count($stringNumbers) != count($translatedNumbers)) {
+            return false;
+        }
+        foreach($stringNumbers as $key => $colorCode) {
+            if($colorCode != $translatedNumbers[$key]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected function checkNumberOfCodes(array $row): bool
+    {
+        preg_match_all('/{[^}]*}/', $row['string'], $stringCodes);
+        preg_match_all('/{[^}]*}/', $row['translated'], $translatedCodes);
+        if(count($stringCodes) != count($translatedCodes)) {
+            return false;
+        }
+        return true;
     }
 }
