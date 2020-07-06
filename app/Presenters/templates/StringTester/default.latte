@@ -1,0 +1,17 @@
+{var $title="String Tester"}
+{block content}
+{form tsvForm}
+
+<div class="form-group row required custom-file">
+    <div class="col-sm-12 col-form-label">
+        <label n:name=tsv class="custom-file-label">Tsv File <span class="text-danger font-weight-bold">*</span></label>
+        <input n:name=tsv type="file" class="custom-file-input">
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-form-label"></div>
+    <div class="col-sm-9"><input type="submit" n:name=check class="btn btn-primary button" value="Check"></div>
+</div>
+{/form}
+{/block}
