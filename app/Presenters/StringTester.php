@@ -173,7 +173,7 @@ final class StringTesterPresenter extends BasePresenter
         foreach(self::NON_TRANSLATED_WORDS as $word) {
             preg_match_all('/'.$word.'/', $row['string'], $stringWords);
             preg_match_all('/'.$word.'/', $row['translated'], $translatedWords);
-            if(count($stringWords[0]) !== count($translatedWords[0])) {
+            if(count($stringWords[0]) > count($translatedWords[0])) {
                 return false;
             }
         }
