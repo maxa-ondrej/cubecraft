@@ -82,11 +82,11 @@ final class StringTesterPresenter extends BasePresenter
     {
         preg_match_all('/&./', $row['string'], $colorCodesString);
         preg_match_all('/&./', $row['translated'], $colorCodesTranslated);
-        if(count($colorCodesString) != count($colorCodesTranslated)) {
+        if(count($colorCodesString[0]) != count($colorCodesTranslated[0])) {
             return false;
         }
-        foreach($colorCodesString as $key => $colorCode) {
-            if($colorCode != $colorCodesTranslated[$key]) {
+        foreach($colorCodesString[0] as $key => $colorCode) {
+            if($colorCode != $colorCodesTranslated[0][$key]) {
                 return false;
             }
         }
@@ -97,7 +97,7 @@ final class StringTesterPresenter extends BasePresenter
     {
         preg_match_all('/\d/', $row['string'], $stringNumbers);
         preg_match_all('/\d/', $row['translated'], $translatedNumbers);
-        if(count($stringNumbers) != count($translatedNumbers)) {
+        if(count($stringNumbers[0]) != count($translatedNumbers[0])) {
             return false;
         }
         foreach($stringNumbers as $key => $colorCode) {
@@ -110,9 +110,9 @@ final class StringTesterPresenter extends BasePresenter
 
     protected function checkNumberOfCodes(array $row): bool
     {
-        preg_match_all('/{[^}]*}/', $row['string'], $stringCodes);
-        preg_match_all('/{[^}]*}/', $row['translated'], $translatedCodes);
-        if(count($stringCodes) != count($translatedCodes)) {
+        preg_match_all('/{[^}]+}/', $row['string'], $stringCodes);
+        preg_match_all('/{[^}]+}/', $row['translated'], $translatedCodes);
+        if(count($stringCodes[0]) != count($translatedCodes[0])) {
             return false;
         }
         return true;
