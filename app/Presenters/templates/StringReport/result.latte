@@ -1,0 +1,37 @@
+{var $title="String Report"}
+{block content}
+<a n:href="StringReport:results">← Back To All</a>
+<h4>{$string_key}</h4>
+
+<table style="width: 100%;">
+    <tr>
+        <th width="15%">Row</th>
+        <td>{$row}</td>
+    </tr>
+    <tr>
+        <th>Group Id</th>
+        <td>{$id_group}</td>
+    </tr>
+    <tr>
+        <th>Languages</th>
+        <td>{$languages}</td>
+    </tr>
+    <tr>
+        <th>String</th>
+        <td>{$string}</td>
+    </tr>
+</table>
+
+<h5 style="margin-top: 10px">Recommended Fixes</h5>
+<div class="row">
+    {foreach $fixes as $fix}
+    <div class="col-lg-4" style="margin-bottom: 20px">
+        <div class="card">
+            <div class="card-header bg-primary" style="color: white">{$fix[name]}</div>
+            <div class="card-body">{$fix[string]}</div>
+            <div class="card-footer">{$fix[comment]}</div>
+        </div>
+    </div>
+    {/foreach}
+</div>
+{/block}

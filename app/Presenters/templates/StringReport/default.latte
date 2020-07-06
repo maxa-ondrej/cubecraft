@@ -1,0 +1,91 @@
+{var $title="String Report"}
+{block content}
+{form reportForm}
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=username>Discord Username <span class="text-danger font-weight-bold">*</span></label>
+    </div>
+    <div class="col-sm-9">
+        <input n:name=username placeholder="e.g. Majksa#1499">
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=row>Row <span class="text-danger font-weight-bold">*</span></label>
+    </div>
+    <div class="col-sm-9">
+        <input n:name=row placeholder="e.g. 36">
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=string_key>String Key <span class="text-danger font-weight-bold">*</span></label>
+    </div>
+    <div class="col-sm-9">
+        <input n:name=string_key placeholder="e.g. happy_to_eliminate">
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=id_group>Group Id <span class="text-danger font-weight-bold">*</span></label>
+    </div>
+    <div class="col-sm-9">
+        <input n:name=id_group placeholder="e.g. 25">
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=sheet>Sheet Name <span class="text-danger font-weight-bold">*</span></label><br>
+    </div>
+    <div class="col-sm-9">
+        {input sheet}
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=language>Language <span class="text-danger font-weight-bold">*</span></label><br>
+    </div>
+    <div class="col-sm-9">
+        {input language}
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=string>Original String <span class="text-danger font-weight-bold">*</span></label>
+    </div>
+    <div class="col-sm-9">
+        <input n:name=string placeholder="e.g. &e&lcub;name&rcub; &ewas very happy to eliminate &lcub;team&rcub; &lcub;team_colour&rcub;Team's &eegg.'">
+    </div>
+</div>
+
+<div class="form-group row required">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=string_new>Corrected String <span class="text-danger font-weight-bold">*</span></label>
+    </div>
+    <div class="col-sm-9">
+        <input n:name=string_new placeholder="e.g. &e&lcub;name&rcub; &ewas very happy to eliminate &lcub;team&rcub; &lcub;team_colour&rcub;Team's &eegg.">
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-form-label">
+        <label n:name=comment>Comment</label>
+    </div>
+    <div class="col-sm-9">
+        <textarea n:name=comment placeholder="e.g. There is a ' at the end of the string."></textarea>
+    </div>
+</div>
+
+<div class="form-group row">
+    <div class="col-sm-3 col-form-label"></div>
+    <div class="col-sm-9"><input type="submit" name="report" class="btn btn-primary button" value="Report"></div>
+</div>
+{/form}
+{/block}
