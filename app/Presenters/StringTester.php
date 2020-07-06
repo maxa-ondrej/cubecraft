@@ -52,6 +52,8 @@ final class StringTesterPresenter extends BasePresenter
         $data = include $filename;
         $failed = [];
         foreach($data as $row) {
+            $spacedRow['string'] = str_replace(' ', '·', $row['string']);
+            $spacedRow['translated'] = str_replace(' ', '·', $row['translated']);
             if(!$this->checkCommandName($row)) {
                 $failed['Command Name'][] = $row;
             }
@@ -66,6 +68,12 @@ final class StringTesterPresenter extends BasePresenter
             }
             if(!$this->checkVariables($row)) {
                 $failed['Variables'][] = $row;
+            }
+            if(!$this->checkSurroundingSpaces($row)) {
+                $failed['Surrounding Spaces'][] = array_replace($row, $spacedRow);
+            }
+            if(!$this->checkDoubleSpaces($row)) {
+                $failed['Double Spaces'][] = array_replace($row, $spacedRow);
             }
         }
         $this->template->failed = $failed;
@@ -134,5 +142,16 @@ final class StringTesterPresenter extends BasePresenter
             }
         }
         return true;
+    }
+
+    protected function checkSurroundingSpaces(array $row): bool
+    {
+        return $row['translated'] == trim($row['translated']);
+    }
+
+    protected function checkDoubleSpaces(array $row): bool
+    {
+        preg_match_all('/  /', $row['translated'], $doubleSpaces);
+        return count($doubleSpaces[0]) === 0;
     }
 }
