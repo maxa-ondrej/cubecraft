@@ -64,6 +64,9 @@ final class StringTesterPresenter extends BasePresenter
             if(!$this->checkNumberOfCodes($row)) {
                 $failed['Number Of Codes'][] = $row;
             }
+            if(!$this->checkVariables($row)) {
+                $failed['Variables'][] = $row;
+            }
         }
         $this->template->failed = $failed;
     }
@@ -114,6 +117,21 @@ final class StringTesterPresenter extends BasePresenter
         preg_match_all('/{[^}]+}/', $row['translated'], $translatedCodes);
         if(count($stringCodes[0]) != count($translatedCodes[0])) {
             return false;
+        }
+        return true;
+    }
+
+    protected function checkVariables(array $row): bool
+    {
+        preg_match_all('/{[a-zA-Z\-\_]+}/', $row['string'], $stringVariables);
+        preg_match_all('/{[a-zA-Z\-\_}]+}/', $row['translated'], $translatedVariables);
+        if(count($stringVariables[0]) === 0 || count($translatedVariables[0]) === 0) {
+            return true;
+        }
+        foreach($stringVariables[0] as $key => $variable) {
+            if($variable != $translatedVariables[0][$key]) {
+                return false;
+            }
         }
         return true;
     }
