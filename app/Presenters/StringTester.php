@@ -10,6 +10,16 @@ use Nette\Forms\Form;
 
 final class StringTesterPresenter extends BasePresenter
 {
+    protected const NON_TRANSLATED_WORDS = [
+        'Lucky Islands', 'EggWars', 'SkyWars', 'MinerWare', 'Tower Defence', 'SkyBlock', 'BlockWars',
+        'Quake Craft', 'QuakeCraft', 'Battle Zone', 'BattleZone', 'Paintball', 'Layer Spleef',
+        'Wing Rush', 'Archer Assault', 'Line Dash', 'Survival Games', 'Slime Survival',
+        'Stone', 'Iron', 'Gold', 'Lapiz', 'Diamond', 'Emerald', 'Obsidian', 'Plus', 'Helper',
+        'Cubelet',
+        'CubeCraft', 'CubeCraft Games',
+        'FFA', 'MVP', 'VIP', 'PvP', 'CTF',
+        'Spring', 'Carrots', 'Hatch', 'Chocolate', 'Easter', 'Bunny', 'Hunt', 'Rabbit', 'Eggs',
+    ];
     protected function createComponentTsvForm(): UIForm
     {
         $form = new BS4Form;
@@ -74,6 +84,9 @@ final class StringTesterPresenter extends BasePresenter
             }
             if(!$this->checkDoubleSpaces($row)) {
                 $failed['Double Spaces'][] = array_replace($row, $spacedRow);
+            }
+            if(!$this->checkNontranslatedWords($row)) {
+                $failed['Should Not Be Translated'][] = $row;
             }
         }
         $this->template->failed = $failed;
@@ -153,5 +166,17 @@ final class StringTesterPresenter extends BasePresenter
     {
         preg_match_all('/  /', $row['translated'], $doubleSpaces);
         return count($doubleSpaces[0]) === 0;
+    }
+
+    protected function checkNontranslatedWords(array $row): bool
+    {
+        foreach(self::NON_TRANSLATED_WORDS as $word) {
+            preg_match_all('/'.$word.'/', $row['string'], $stringWords);
+            preg_match_all('/'.$word.'/', $row['translated'], $translatedWords);
+            if(count($stringWords[0]) !== count($translatedWords[0])) {
+                return false;
+            }
+        }
+        return true;
     }
 }
