@@ -102,7 +102,7 @@ final class StringTesterPresenter extends BasePresenter
             if (!$this->checkDoubleSpaces($row)) {
                 $failed['Double Spaces'][] = array_replace($row, $spacedRow);
             }
-            if (!$this->checkTrailing($row)) {
+            if (!$this->checkTrailingDots($row)) {
                 $failed['Trailing Dots'][] = array_replace($row, $spacedRow);
             }
             if (!$this->checkDoubleDots($row)) {
@@ -151,8 +151,8 @@ final class StringTesterPresenter extends BasePresenter
 
     protected function checkNumbers(array $row): bool
     {
-        preg_match_all('/\d/', $row['string'], $stringNumbers);
-        preg_match_all('/\d/', $row['translated'], $translatedNumbers);
+        preg_match_all('/(?!&)\d/', $row['string'], $stringNumbers);
+        preg_match_all('/(?!&)\d/', $row['translated'], $translatedNumbers);
         if (count($stringNumbers[0]) != count($translatedNumbers[0])) {
             return false;
         }
