@@ -92,7 +92,15 @@ final class StringTesterPresenter extends BasePresenter
                 $failed['Should Not Be Translated'][] = $row;
             }
         }
+        if(count($failed) == 0) {
+            $this->redirect('StringTester:success', $filename);
+        }
         $this->template->failed = $failed;
+        $this->template->filename = $filename;
+    }
+
+    public function renderSuccess($filename)
+    {
         $this->template->filename = $filename;
     }
 
