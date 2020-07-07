@@ -14,9 +14,10 @@
     <tbody>
         {foreach $data as $row}
         <tr>
-            {foreach $row as $column}
-            <td>{$column}</td>
-            {/foreach}
+            <td style="width: 10%">{$row->row}</td>
+            <td style="width: 30%">{$row->key}</td>
+            <td style="width: 30%">{$row->default|noescape}</td>
+            <td style="width: 30%">{$row->translated|noescape}</td>
         </tr>
         {/foreach}
     </tbody>
