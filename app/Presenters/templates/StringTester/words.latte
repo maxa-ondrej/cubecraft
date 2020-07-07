@@ -1,0 +1,9 @@
+{extends '../@layout.latte'}
+{var $title="String Tester"}
+{block content}
+<h3>List of Words, that should not be translated</h3>
+{foreach $words as $category => $categoryWords}
+<h4 style="margin-top: 20px">{$category}</h4>
+    {foreach $categoryWords as $key => $word}<span>{if $key != 0}<span>, </span>{/if}{$word}</span>{/foreach}
+{/foreach}
+{/block}
