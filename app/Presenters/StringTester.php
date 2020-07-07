@@ -102,6 +102,12 @@ final class StringTesterPresenter extends BasePresenter
             if (!$this->checkDoubleSpaces($row)) {
                 $failed['Double Spaces'][] = array_replace($row, $spacedRow);
             }
+            if (!$this->checkTrailing($row)) {
+                $failed['Trailing Dots'][] = array_replace($row, $spacedRow);
+            }
+            if (!$this->checkDoubleDots($row)) {
+                $failed['Double Dots'][] = array_replace($row, $spacedRow);
+            }
             if (!$this->checkNontranslatedWords($row)) {
                 $failed['Should Not Be Translated'][] = $row;
             }
@@ -190,7 +196,23 @@ final class StringTesterPresenter extends BasePresenter
 
     protected function checkDoubleSpaces(array $row): bool
     {
-        preg_match_all('/  /', $row['translated'], $doubleSpaces);
+        preg_match_all('/\s{2}/', $row['translated'], $doubleSpaces);
+        return count($doubleSpaces[0]) === 0;
+    }
+
+    protected function checkTrailingDots(array $row): bool
+    {
+        $lastStringChar = substr($row['string'], -1);
+        $lastTranslatedChar = substr($row['translated'], -1);
+        if ($lastStringChar === '.' || $lastTranslatedChar === '.') {
+            return $lastStringChar == $lastTranslatedChar;
+        }
+        return true;
+    }
+
+    protected function checkDoubleDots(array $row): bool
+    {
+        preg_match_all('/\.{2}/', $row['translated'], $doubleSpaces);
         return count($doubleSpaces[0]) === 0;
     }
 
