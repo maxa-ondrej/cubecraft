@@ -103,10 +103,10 @@ final class StringTesterPresenter extends BasePresenter
                 $failed['Double Spaces'][] = array_replace($row, $spacedRow);
             }
             if (!$this->checkTrailingDots($row)) {
-                $failed['Trailing Dots'][] = array_replace($row, $spacedRow);
+                $failed['Trailing Dots'][] = $row;
             }
             if (!$this->checkDoubleDots($row)) {
-                $failed['Double Dots'][] = array_replace($row, $spacedRow);
+                $failed['Double Dots'][] = $row;
             }
             if (!$this->checkNontranslatedWords($row)) {
                 $failed['Should Not Be Translated'][] = $row;
