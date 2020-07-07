@@ -60,7 +60,7 @@ class Tools
     {
         $found = preg_match_all($search, $subject, $matches, PREG_OFFSET_CAPTURE);
         if (false !== $found && $found > $nth) {
-            return substr_replace($subject, $replace, $matches[0][$nth][1], strlen($search));
+            return substr_replace($subject, $replace, $matches[0][$nth][1], strlen($search)-2);
         }
         return $subject;
     }

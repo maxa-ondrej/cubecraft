@@ -100,6 +100,8 @@ class Checker
         }
         foreach ($colorCodesString[0] as $key => $colorCode) {
             if ($colorCode != $colorCodesTranslated[0][$key]) {
+                dump(self::COLOR_REG, Tools::colorize(Tools::DANGER, $colorCodesString[0][$key]), $row->default, $key, Tools::str_replace_nth(self::COLOR_REG, Tools::colorize(Tools::DANGER, $colorCodesString[0][$key]), $row->default, $key));
+                exit;
                 $row->default = Tools::str_replace_nth(self::COLOR_REG, Tools::colorize(Tools::DANGER, $colorCodesString[0][$key]), $row->default, $key);
                 $row->translated = Tools::str_replace_nth(self::COLOR_REG, Tools::colorize(Tools::DANGER, $colorCodesTranslated[0][$key]), $row->translated, $key);
                 return $row;
