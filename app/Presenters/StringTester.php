@@ -54,12 +54,15 @@ final class StringTesterPresenter extends BasePresenter
             }
         }
         file_put_contents($filename, '<?php return '.var_export($data, true).';');
-        $this->redirect('StringTester:failed', $filename);
+        $this->redirect('StringTester:failed', [
+            $values->tsv->getName(),
+            $filename
+        ]);
     }
 
-    public function renderFailed($filename)
+    public function renderFailed($filename, $temp)
     {
-        $data = include $filename;
+        $data = include $temp;
         $failed = [];
         foreach($data as $row) {
             $spacedRow['string'] = str_replace(' ', '·', $row['string']);
@@ -90,6 +93,7 @@ final class StringTesterPresenter extends BasePresenter
             }
         }
         $this->template->failed = $failed;
+        $this->template->filename = $filename;
     }
 
     protected function checkCommandName(array $row): bool
