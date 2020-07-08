@@ -26,13 +26,13 @@ class Checker
     ];
 
     public const
-        COMMAND_NAME_REG = '/command_.*_name/',
-        COLOR_REG = '/&./',
-        NUMBER_REG = '/(?!&)\d/',
-        CODE_REG = '/{[^}]+}/',
-        VARIABLE_REG = '/{[a-zA-Z\-\_]+}/',
-        DOUBLE_SPACE_REG = '/ {2}/',
-        DOUBLE_DOT_REG = '/^[^\.]*\.{2}[^\.]*$/';
+        COMMAND_NAME_REG = '/(command_.*_name)/',
+        COLOR_REG = '/(&.)/',
+        NUMBER_REG = '/(?<!&)(\d)/',
+        CODE_REG = '/({[^}]+})/',
+        VARIABLE_REG = '/({[a-zA-Z\-\_]+})/',
+        DOUBLE_SPACE_REG = '/( {2})/',
+        DOUBLE_DOT_REG = '/^[^\.]*(\.{2})[^\.]*$/';
 
     /**
      * Check
@@ -104,7 +104,8 @@ class Checker
         preg_match_all(self::COLOR_REG, $row->default, $colorCodesString);
         preg_match_all(self::COLOR_REG, $row->translated, $colorCodesTranslated);
         if (count($colorCodesString[0]) != count($colorCodesTranslated[0])) {
-            //TODO Highliting
+            $row->default = preg_replace(self::COLOR_REG, Tools::style('$1', Tools::DANGER, true), $row->default);
+            $row->translated = preg_replace(self::COLOR_REG, Tools::style('$1', Tools::DANGER, true), $row->translated);
             return $row;
         }
         foreach ($colorCodesString[0] as $key => $colorCode) {
@@ -125,11 +126,11 @@ class Checker
      */
     protected static function checkNumbers(Row $row): ?Row
     {
-        // TODO better regex
-        preg_match_all(self::NUMBER_REG, $row->default, $stringNumbers);
-        preg_match_all(self::NUMBER_REG, $row->translated, $translatedNumbers);
+        preg_match_all(self::NUMBER_REG, preg_replace(self::CODE_REG, '', $row->default), $stringNumbers);
+        preg_match_all(self::NUMBER_REG, preg_replace(self::CODE_REG, '', $row->translated), $translatedNumbers);
         if (count($stringNumbers[0]) != count($translatedNumbers[0])) {
-            //TODO Highliting
+            $row->default = preg_replace(self::NUMBER_REG, Tools::style('$1', Tools::DANGER, true), $row->default);
+            $row->translated = preg_replace(self::NUMBER_REG, Tools::style('$1', Tools::DANGER, true), $row->translated);
             return $row;
         }
         foreach ($stringNumbers[0] as $key => $number) {
@@ -156,7 +157,8 @@ class Checker
         if (count($stringVariables[0]) === 0 && count($translatedVariables[0]) === 0) {
             return null;
         } elseif (count($stringVariables[0]) === 0 || count($translatedVariables[0]) === 0) {
-            //TODO Highliting
+            $row->default = preg_replace(self::VARIABLE_REG, Tools::style('$1', Tools::DANGER, true), $row->default);
+            $row->translated = preg_replace(self::VARIABLE_REG, Tools::style('$1', Tools::DANGER, true), $row->translated);
             return $row;
         }
         foreach ($stringVariables[0] as $key => $variable) {
@@ -195,7 +197,7 @@ class Checker
     protected static function checkDoubleSpaces(Row $row): ?Row
     {
         return null;
-        preg_match_all(self::DOUBLE_SPACE_REG, $row->string, $stringDoubleSpaces);
+        preg_match_all(self::DOUBLE_SPACE_REG, $row->default, $stringDoubleSpaces);
         preg_match_all(self::DOUBLE_SPACE_REG, $row->translated, $translatedDoubleSpaces);
         if (count($stringDoubleSpaces[0]) !== count($translatedDoubleSpaces[0])) {
             $row->default = str_replace('··', Tools::style('··', Tools::DANGER, true), str_replace(' ', '·', $row->default));
@@ -237,7 +239,7 @@ class Checker
      */
     protected static function checkDoubleDots(Row $row): ?Row
     {
-        preg_match_all(self::DOUBLE_DOT_REG, $row->string, $stringDoubleDots);
+        preg_match_all(self::DOUBLE_DOT_REG, $row->default, $stringDoubleDots);
         preg_match_all(self::DOUBLE_DOT_REG, $row->translated, $translatedDoubleDots);
         if (count($stringDoubleDots[0]) !== count($translatedDoubleDots[0])) {
             $row->string = preg_replace(self::DOUBLE_DOT_REG, Tools::style('..', Tools::DANGER, true), $row->string);
@@ -267,9 +269,12 @@ class Checker
                 }
             }
             foreach ($words as $word) {
-                preg_match_all('/' . $word . '/', $row->default, $stringWords);
-                preg_match_all('/' . $word . '/', $row->translated, $translatedWords);
+                $regex = '/(' . $word . ')/';
+                preg_match_all($regex, $row->default, $stringWords);
+                preg_match_all($regex, $row->translated, $translatedWords);
                 if (count($stringWords[0]) > count($translatedWords[0])) {
+                    $row->default = preg_replace($regex, Tools::style('$1', Tools::DANGER, true), $row->default);
+                    $row->translated = preg_replace($regex, Tools::style('$1', Tools::DANGER, true), $row->translated);
                     return $row;
                 }
             }
