@@ -1,14 +1,23 @@
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top container" style="height: 50px">
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link{if $title == 'Home'} active{/if}" n:href="Homepage:default">Home</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link{if $title == 'String Report'} active{/if}" n:href="StringReport:default">String Report</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link{if $title == 'String Tester'} active{/if}" n:href="StringTester:default">String Tester</a>
-    </li>
-  </ul>
-</nav> 
-<div style="height: 50px; margin-bottom: 10px"></div>
+<nav class="navbar navbar-expand-md bg-dark navbar-dark" style="margin-bottom: 10px;">
+  <div class="container">
+    <a class="navbar-brand" n:href="Homepage:default">CCG Translations</a>
+    
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link{if $title == 'String Report'} active{/if}" n:href="StringReport:default">String Report</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{if $title == 'String Tester'} active{/if}" n:href="StringTester:default">String Tester</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{if $title == 'List of Words'} active{/if}" n:href="StringTester:words">List of Words</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
