@@ -186,9 +186,12 @@ class Checker
     protected static function checkSurroundingSpaces(Row $row): ?Row
     {
         if ($row->translated !== trim($row->translated)) {
-            //TODO Highliting
             $row->default = str_replace(' ', '·', $row->default);
+            $row->default = preg_replace('/^·/', Tools::style('·', Tools::DANGER, true), $row->default);
+            $row->default = preg_replace('/·$/', Tools::style('·', Tools::DANGER, true), $row->default);
             $row->translated = str_replace(' ', '·', $row->translated);
+            $row->translated = preg_replace('/^·/', Tools::style('·', Tools::DANGER, true), $row->translated);
+            $row->translated = preg_replace('/·$/', Tools::style('·', Tools::DANGER, true), $row->translated);
             return $row;
         }
         return null;
