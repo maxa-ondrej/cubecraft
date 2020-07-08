@@ -82,8 +82,8 @@ class Checker
     {
         if (preg_match(self::COMMAND_NAME_REG, $row->key)) {
             if ($row->default != $row->translated) {
-                $row->default = Tools::colorize(Tools::DANGER, $row->default);
-                $row->translated = Tools::colorize(Tools::DANGER, $row->translated);
+                $row->default = Tools::style($row->default, Tools::DANGER, true);
+                $row->translated = Tools::style($row->translated, Tools::DANGER, true);
                 return $row;
             }
         }
@@ -100,8 +100,8 @@ class Checker
         }
         foreach ($colorCodesString[0] as $key => $colorCode) {
             if ($colorCode != $colorCodesTranslated[0][$key]) {
-                $row->default = Tools::str_replace_nth(self::COLOR_REG, Tools::colorize(Tools::DANGER, $colorCodesString[0][$key]), $row->default, $key);
-                $row->translated = Tools::str_replace_nth(self::COLOR_REG, Tools::colorize(Tools::DANGER, $colorCodesTranslated[0][$key]), $row->translated, $key);
+                $row->default = Tools::str_replace_nth(self::COLOR_REG, Tools::style($colorCodesString[0][$key], Tools::DANGER, true), $row->default, $key);
+                $row->translated = Tools::str_replace_nth(self::COLOR_REG, Tools::style($colorCodesTranslated[0][$key], Tools::DANGER, true), $row->translated, $key);
                 return $row;
             }
         }
@@ -118,8 +118,8 @@ class Checker
         }
         foreach ($stringNumbers[0] as $key => $number) {
             if ($number != $translatedNumbers[0][$key]) {
-                $row->default = Tools::str_replace_nth(self::NUMBER_REG, Tools::colorize(Tools::DANGER, $stringNumbers[0][$key]), $row->default, $key);
-                $row->translated = Tools::str_replace_nth(self::NUMBER_REG, Tools::colorize(Tools::DANGER, $translatedNumbers[0][$key]), $row->translated, $key);
+                $row->default = Tools::str_replace_nth(self::NUMBER_REG, Tools::style($stringNumbers[0][$key], Tools::DANGER, true), $row->default, $key);
+                $row->translated = Tools::str_replace_nth(self::NUMBER_REG, Tools::style($translatedNumbers[0][$key], Tools::DANGER, true), $row->translated, $key);
                 return $row;
             }
         }
@@ -149,8 +149,8 @@ class Checker
         }
         foreach ($stringVariables[0] as $key => $variable) {
             if ($variable != $translatedVariables[0][$key]) {
-                $row->default = Tools::str_replace_nth(self::VARIABLE_REG, Tools::colorize(Tools::DANGER, $stringVariables[0][$key]), $row->default, $key);
-                $row->translated = Tools::str_replace_nth(self::VARIABLE_REG, Tools::colorize(Tools::DANGER, $translatedVariables[0][$key]), $row->translated, $key);
+                $row->default = Tools::str_replace_nth(self::VARIABLE_REG, Tools::style($stringVariables[0][$key], Tools::DANGER, true), $row->default, $key);
+                $row->translated = Tools::str_replace_nth(self::VARIABLE_REG, Tools::style($translatedVariables[0][$key], Tools::DANGER, true), $row->translated, $key);
                 return $row;
             }
         }
@@ -171,8 +171,8 @@ class Checker
     {
         preg_match_all(self::DOUBLE_SPACE_REG, $row->translated, $doubleSpaces);
         if (count($doubleSpaces[0]) !== 0) {
-            $row->default = str_replace(' ', '·', $row->default);
-            $row->translated = str_replace(' ', '·', $row->translated);
+            $row->default = str_replace('··', Tools::style('··', Tools::DANGER, true), str_replace(' ', '·', $row->default));
+            $row->translated = str_replace('··', Tools::style('··', Tools::DANGER, true), str_replace(' ', '·', $row->translated));
             return $row;
         }
         return null;
@@ -184,10 +184,10 @@ class Checker
         $lastTranslatedChar = substr($row->translated, -1);
         if ($lastStringChar === '.' || $lastTranslatedChar === '.') {
             if ($lastStringChar === '.') {
-                $row->default = substr($row->default, 0, -1). Tools::colorize(Tools::DANGER, $lastStringChar);
+                $row->default = substr($row->default, 0, -1). Tools::style($lastStringChar, Tools::DANGER, true);
             }
             if ($lastTranslatedChar === '.') {
-                $row->translated = substr($row->translated, 0, -1). Tools::colorize(Tools::DANGER, $lastTranslatedChar);
+                $row->translated = substr($row->translated, 0, -1). Tools::style($lastTranslatedChar, Tools::DANGER, true);
             }
             if ($lastStringChar !== $lastTranslatedChar) {
                 return $row;
@@ -200,7 +200,7 @@ class Checker
     {
         preg_match_all(self::DOUBLE_DOT_REG, $row->translated, $doubleDots);
         if (count($doubleDots[0]) !== 0) {
-            preg_replace(self::DOUBLE_DOT_REG, Tools::colorize(Tools::DANGER, '..'), $row->translated);
+            preg_replace(self::DOUBLE_DOT_REG, Tools::style('..', Tools::DANGER, true), $row->translated);
             return $row;
         }
         return null;
