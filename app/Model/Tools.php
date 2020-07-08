@@ -25,8 +25,11 @@ class Tools
      * @param string $text
      * @return string
      */
-    public static function colorize(string $color, string $text): string
+    public static function style(string $text, string $color, bool $bold = false): string
     {
+        if($bold) {
+            $text = '<b>' . $text . '</b>';
+        }
         return '<span class="text-'.$color.'">'.$text.'</span>';
     }
 
