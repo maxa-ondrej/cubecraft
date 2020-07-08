@@ -151,7 +151,6 @@ class Checker
      */
     protected static function checkVariables(Row $row): ?Row
     {
-        //TODO Compare arrays of variables
         preg_match_all(self::VARIABLE_REG, $row->default, $stringVariables);
         preg_match_all(self::VARIABLE_REG, $row->translated, $translatedVariables);
         if (count($stringVariables[0]) === 0 && count($translatedVariables[0]) === 0) {
@@ -160,6 +159,13 @@ class Checker
             $row->default = preg_replace(self::VARIABLE_REG, Tools::style('$1', Tools::DANGER, true), $row->default);
             $row->translated = preg_replace(self::VARIABLE_REG, Tools::style('$1', Tools::DANGER, true), $row->translated);
             return $row;
+        }
+        $tempString = $stringVariables[0];
+        $tempTranslated = $translatedVariables[0];
+        sort($tempString);
+        sort($tempTranslated);
+        if($tempString === $tempTranslated) {
+            return null;
         }
         foreach ($stringVariables[0] as $key => $variable) {
             if ($variable != $translatedVariables[0][$key]) {
