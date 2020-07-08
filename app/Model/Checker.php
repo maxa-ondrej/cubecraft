@@ -198,9 +198,11 @@ class Checker
 
     protected static function checkDoubleDots(Row $row): ?Row
     {
-        preg_match_all(self::DOUBLE_DOT_REG, $row->translated, $doubleDots);
-        if (count($doubleDots[0]) !== 0) {
-            preg_replace(self::DOUBLE_DOT_REG, Tools::style('..', Tools::DANGER, true), $row->translated);
+        preg_match_all(self::DOUBLE_DOT_REG, $row->string, $stringDoubleDots);
+        preg_match_all(self::DOUBLE_DOT_REG, $row->translated, $translatedDoubleDots);
+        if (count($stringDoubleDots[0]) !== count($translatedDoubleDots[0])) {
+            $row->string = preg_replace(self::DOUBLE_DOT_REG, Tools::style('..', Tools::DANGER, true), $row->string);
+            $row->translated = preg_replace(self::DOUBLE_DOT_REG, Tools::style('..', Tools::DANGER, true), $row->translated);
             return $row;
         }
         return null;
