@@ -53,9 +53,6 @@ class Checker
             if (!is_null($newRow = self::checkNumbers(clone $row))) {
                 $failed['Numbers'][] = $newRow;
             }
-            if (!is_null($newRow = self::checkNumberOfCodes(clone $row))) {
-                $failed['Number Of Codes'][] = $newRow;
-            }
             if (!is_null($newRow = self::checkVariables(clone $row))) {
                 $failed['Variables'][] = $newRow;
             }
@@ -78,6 +75,12 @@ class Checker
         return $failed;
     }
 
+    /**
+     * Checks if the command names match.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkCommandName(Row $row): ?Row
     {
         if (preg_match(self::COMMAND_NAME_REG, $row->key)) {
@@ -90,12 +93,18 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if color codes match.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkColorCodes(Row $row): ?Row
     {
         preg_match_all(self::COLOR_REG, $row->default, $colorCodesString);
         preg_match_all(self::COLOR_REG, $row->translated, $colorCodesTranslated);
         if (count($colorCodesString[0]) != count($colorCodesTranslated[0])) {
-            //TODO
+            //TODO Highliting
             return $row;
         }
         foreach ($colorCodesString[0] as $key => $colorCode) {
@@ -108,12 +117,19 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if numbers match.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkNumbers(Row $row): ?Row
     {
+        // TODO better regex
         preg_match_all(self::NUMBER_REG, $row->default, $stringNumbers);
         preg_match_all(self::NUMBER_REG, $row->translated, $translatedNumbers);
         if (count($stringNumbers[0]) != count($translatedNumbers[0])) {
-            //TODO
+            //TODO Highliting
             return $row;
         }
         foreach ($stringNumbers[0] as $key => $number) {
@@ -126,25 +142,21 @@ class Checker
         return null;
     }
 
-    protected static function checkNumberOfCodes(Row $row): ?Row
-    {
-        preg_match_all(self::CODE_REG, $row->default, $stringCodes);
-        preg_match_all(self::CODE_REG, $row->translated, $translatedCodes);
-        if (count($stringCodes[0]) != count($translatedCodes[0])) {
-            //TODO
-            return $row;
-        }
-        return null;
-    }
-
+    /**
+     * Checks if both strings' variabels match.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkVariables(Row $row): ?Row
     {
+        //TODO Compare arrays of variables
         preg_match_all(self::VARIABLE_REG, $row->default, $stringVariables);
         preg_match_all(self::VARIABLE_REG, $row->translated, $translatedVariables);
         if (count($stringVariables[0]) === 0 && count($translatedVariables[0]) === 0) {
             return null;
         } elseif (count($stringVariables[0]) === 0 || count($translatedVariables[0]) === 0) {
-            //TODO
+            //TODO Highliting
             return $row;
         }
         foreach ($stringVariables[0] as $key => $variable) {
@@ -157,9 +169,16 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if translated string has spaces around it.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkSurroundingSpaces(Row $row): ?Row
     {
         if ($row->translated !== trim($row->translated)) {
+            //TODO Highliting
             $row->default = str_replace(' ', '·', $row->default);
             $row->translated = str_replace(' ', '·', $row->translated);
             return $row;
@@ -167,10 +186,18 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if the string contains different amount of double spaces.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkDoubleSpaces(Row $row): ?Row
     {
-        preg_match_all(self::DOUBLE_SPACE_REG, $row->translated, $doubleSpaces);
-        if (count($doubleSpaces[0]) !== 0) {
+        return null;
+        preg_match_all(self::DOUBLE_SPACE_REG, $row->string, $stringDoubleSpaces);
+        preg_match_all(self::DOUBLE_SPACE_REG, $row->translated, $translatedDoubleSpaces);
+        if (count($stringDoubleSpaces[0]) !== count($translatedDoubleSpaces[0])) {
             $row->default = str_replace('··', Tools::style('··', Tools::DANGER, true), str_replace(' ', '·', $row->default));
             $row->translated = str_replace('··', Tools::style('··', Tools::DANGER, true), str_replace(' ', '·', $row->translated));
             return $row;
@@ -178,6 +205,12 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if both strings have or do not have a dot at the end.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkTrailingDots(Row $row): ?Row
     {
         $lastStringChar = substr($row->default, -1);
@@ -196,6 +229,12 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if the string contains different amount of double dots.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkDoubleDots(Row $row): ?Row
     {
         preg_match_all(self::DOUBLE_DOT_REG, $row->string, $stringDoubleDots);
@@ -208,6 +247,12 @@ class Checker
         return null;
     }
 
+    /**
+     * Checks if non translated words have been translated.
+     *
+     * @param Row $row
+     * @return Row|null
+     */
     protected static function checkNontranslatedWords(Row $row): ?Row
     {
         foreach (self::NON_TRANSLATED_WORDS as $category=>$words) {
