@@ -9,19 +9,19 @@ class Checker
         'Games' => [
             'Lucky Islands', 'EggWars', 'SkyWars', 'MinerWare', 'Tower Defence', 'SkyBlock', 'BlockWars',
             'Quake Craft', 'QuakeCraft', 'Battle Zone', 'BattleZone', 'Paintball', 'Layer Spleef',
-            'Wing Rush', 'Archer Assault', 'Line Dash', 'Survival Games', 'Slime Survival'
+            'Wing Rush', 'Archer Assault', 'Line Dash', 'Survival Games', 'Slime Survival',
         ],
         'Ranks' => [
-            'Stone', 'Iron', 'Gold', 'Lapiz', 'Diamond', 'Emerald', 'Obsidian', 'Plus', 'Helper', 'Moderator', 'Developer', 'Designer', 'Translator'
+            'Stone', 'Iron', 'Gold', 'Lapiz', 'Diamond', 'Emerald', 'Obsidian', 'Plus', 'Helper', 'Moderator', 'Developer', 'Designer', 'Translator',
         ],
         'CubeCraft Custom Words' => [
-            'Cubelet', 'CubeCraft', 'CubeCraft Games'
+            'Cubelet', 'CubeCraft', 'CubeCraft Games',
         ],
         'Abbreviations' => [
-            'FFA', 'MVP', 'VIP', 'PvP', 'CTF'
+            'FFA', 'MVP', 'VIP', 'PvP', 'CTF',
         ],
         'Maps' => [
-            'Carrots', 'Hatch', 'Chocolate', 'Easter', 'Bunny', 'Hunt', 'Rabbit', 'Eggs'
+            'Spring','Carrots', 'Hatch', 'Chocolate', 'Easter', 'Bunny', 'Hunt', 'Rabbit', 'Eggs',
         ],
     ];
 
@@ -208,7 +208,17 @@ class Checker
 
     protected static function checkNontranslatedWords(Row $row): ?Row
     {
-        foreach (self::NON_TRANSLATED_WORDS as $words) {
+        foreach (self::NON_TRANSLATED_WORDS as $category=>$words) {
+            if($category === 'Maps') {
+                if(!preg_match('/map/',$row->key.$row->default)) {
+                    break;
+                }
+            }
+            if($category === 'Ranks') {
+                if(!preg_match('/rank/',$row->key.$row->default)) {
+                    break;
+                }
+            }
             foreach ($words as $word) {
                 preg_match_all('/' . $word . '/', $row->default, $stringWords);
                 preg_match_all('/' . $word . '/', $row->translated, $translatedWords);
