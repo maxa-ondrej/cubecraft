@@ -155,17 +155,16 @@ class Checker
         preg_match_all(self::VARIABLE_REG, $row->translated, $translatedVariables);
         if (count($stringVariables[0]) === 0 && count($translatedVariables[0]) === 0) {
             return null;
-        } elseif (count($stringVariables[0]) === 0 || count($translatedVariables[0]) === 0) {
-            $row->default = preg_replace(self::VARIABLE_REG, Tools::style('$1', Tools::DANGER, true), $row->default);
-            $row->translated = preg_replace(self::VARIABLE_REG, Tools::style('$1', Tools::DANGER, true), $row->translated);
-            return $row;
         }
-        $tempString = $stringVariables[0];
-        $tempTranslated = $translatedVariables[0];
-        sort($tempString);
-        sort($tempTranslated);
-        if($tempString === $tempTranslated) {
-            return null;
+        if(count($stringVariables[0]) !== count($translatedVariables[0])) {
+            $same = array_intersect($stringVariables[0], $translatedVariables[0]);
+            foreach(array_diff($stringVariables[0], $same) as $variable) {
+                $row->default = preg_replace($variable, Tools::style($variable, Tools::DANGER, true), $row->default);
+            }
+            foreach(array_diff($translatedVariables[0], $same) as $variable) {
+                $row->translated = preg_replace($variable, Tools::style($variable, Tools::DANGER, true), $row->translated);
+            }
+            return $row;
         }
         foreach ($stringVariables[0] as $key => $variable) {
             if ($variable != $translatedVariables[0][$key]) {
